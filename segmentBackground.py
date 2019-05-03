@@ -19,6 +19,3 @@ img = segmentBackground(img)
 
 skimage.io.imshow(img)
 skimage.io.show()
-
-
-
