@@ -1,61 +1,60 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 import skimage
 from skimage import segmentation, io, filters, morphology
 
+from segmentBackground import segBack
+
 ### Parameters ###
 EROSION_COUNT = 24
 
+def binarizeImage(image, E_C):
+	image = segBack(image, E_C)
 
-image = io.imread("../image-data/P123-Fg001-R-C01-R01-fused.jpg")
-original_image = image
-plt.figure("Compare", figsize=(15,8))
+	thresh = filters.threshold_minimum(image)
+	print("Threshold value: {}".format(thresh))
+	binary = image > thresh
 
-plt.subplot(121)
-plt.imshow(original_image, cmap="gray")
+	##### Combination of Dilation and Erosion #######
+												#
+	binary = morphology.binary_dilation(binary)     #
+	binary = morphology.binary_dilation(binary)     #
+	binary = morphology.binary_erosion(binary)      #
+	# binary = morphology.binary_dilation(binary)   #
+	binary = morphology.binary_erosion(binary)      #
+	# binary = morphology.binary_erosion(binary)    #
+	# binary = morphology.binary_erosion(binary)    #
+	# binary = morphology.binary_erosion(binary)    #
+												#
+	#################################################
+	
+	return binary
+	
+if __name__ == "__main__":
 
-image = segmentation.inverse_gaussian_gradient(image, alpha=200, sigma=1)
-mask = segmentation.flood(image, (int(original_image.shape[0] / 2), int(original_image.shape[1] / 2)), tolerance=0.5)
-mask = morphology.closing(mask, selem=morphology.disk(4))
+	###Get file from command line ###
+	if len(sys.argv) < 2:
+		print("ERROR --- Please give the filename in /image-data that you wish to binarize")
+		exit()
+	fileName = "../image-data/" + sys.argv[1]
+	image = io.imread(fileName)
 
 
+	original_image = image
+	plt.figure("Compare", figsize=(15,8))
 
-while (EROSION_COUNT > 0):
-    mask = morphology.erosion(mask)
-    EROSION_COUNT -= 1
-    
+	plt.subplot(121)
+	plt.imshow(original_image, cmap="gray")
 
-
-original_image[mask == False] = 255
-
-image = original_image
-
-thresh = filters.threshold_minimum(image)
-print("Threshold value: {}".format(thresh))
-binary = image > thresh
-
-
-##### Combination of Dilation and Erosion #######
-                                                #
-binary = morphology.binary_dilation(binary)     #
-binary = morphology.binary_dilation(binary)     #
-binary = morphology.binary_erosion(binary)      #
-# binary = morphology.binary_dilation(binary)   #
-binary = morphology.binary_erosion(binary)      #
-# binary = morphology.binary_erosion(binary)    #
-# binary = morphology.binary_erosion(binary)    #
-# binary = morphology.binary_erosion(binary)    #
-                                                #
-#################################################
-
+binary = binarizeImage(image,  EROSION_COUNT)
 
 plt.subplot(122)
 plt.imshow(binary, cmap="gray")
 
 # fig.tight_layout()
 plt.show()
-
 
 def key_press(self, event):
     if (event.key_press == 'q'):

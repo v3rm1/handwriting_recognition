@@ -1,21 +1,37 @@
+import sys
 import numpy as np
 import skimage
 from skimage import segmentation, morphology
 
-def segmentBackground(img):
-	initial_levelset = segmentation.circle_level_set(img.shape, radius=50)
-	preprocessed = segmentation.inverse_gaussian_gradient(img, alpha=200, sigma=1)
-	mask = segmentation.flood(preprocessed, (int(img.shape[0] / 2), int(img.shape[1] / 2)), tolerance=0.5)
+### Parameters ###
+EROSION_COUNT = 24
+
+def segBack(image, E_C):
+	original_image = image
+	
+	image = segmentation.inverse_gaussian_gradient(image, alpha=200, sigma=1)
+	mask = segmentation.flood(image, (int(original_image.shape[0] / 2), int(original_image.shape[1] / 2)), tolerance=0.5)
 	mask = morphology.closing(mask, selem=morphology.disk(4))
-	# contour = segmentation.find_boundaries(mask)
-	img[mask == False] = 0
-	# segmented = segmentation.morphological_chan_vese(img, 10, init_level_set=mask)
-	return img
 
+	while (E_C > 0):
+		mask = morphology.erosion(mask)
+		E_C -= 1
+    
+	original_image[mask == False] = 255
 
-img = skimage.io.imread('P21-Fg006-R-C01-R01-fused.jpg')
+	image = original_image
+	return image
+	
+if __name__ == "__main__":
 
-img = segmentBackground(img)
+	###Get file from command line ###
+	if len(sys.argv) < 2:
+		print("ERROR --- Please give the filename in /image-data that you wish to segment")
+		exit()
+	fileName = "../image-data/" + sys.argv[1]
+	img = skimage.io.imread(fileName)
 
-skimage.io.imshow(img)
-skimage.io.show()
+	img = segBack(img, EROSION_COUNT)
+
+	skimage.io.imshow(img)
+	skimage.io.show()
