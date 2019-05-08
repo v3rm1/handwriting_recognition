@@ -48,13 +48,13 @@ if __name__ == "__main__":
 	plt.subplot(121)
 	plt.imshow(original_image, cmap="gray")
 
-binary = binarizeImage(image,  EROSION_COUNT)
+	binary = binarizeImage(image,  EROSION_COUNT)
 
-plt.subplot(122)
-plt.imshow(binary, cmap="gray")
+	plt.subplot(122)
+	plt.imshow(binary, cmap="gray")
 
-# fig.tight_layout()
-plt.show()
+	# fig.tight_layout()
+	plt.show()
 
 def key_press(self, event):
     if (event.key_press == 'q'):
