@@ -55,7 +55,3 @@ if __name__ == "__main__":
 
 	# fig.tight_layout()
 	plt.show()
-
-def key_press(self, event):
-    if (event.key_press == 'q'):
-        plt.close('all')
