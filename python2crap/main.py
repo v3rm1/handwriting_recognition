@@ -47,7 +47,9 @@ for filename in filenames:
     im = cv2.imread(filename, 0)
 
     print '- Thresholding image..'
-    imbw = sauvola.binarize(im, [20, 20], 128, 0.3)
+    #imbw = sauvola.binarize(im, [20, 20], 128, 0.3)
+	### this is janky I know
+    imbw = np.array(255 * (im >= 45), 'uint8')
 
     print '- Localizing lines..',
     lines = linelocalization.localize(imbw)

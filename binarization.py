@@ -35,6 +35,8 @@ if __name__ == "__main__":
     plt.imshow(original_image, cmap="gray")
 
     binary = binarize_image(image)
+	
+    plt.imsave('outputB.png', binary, cmap="gray")
 
     plt.subplot(122)
     plt.imshow(binary, cmap="gray")
