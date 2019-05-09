@@ -14,11 +14,10 @@ EROSION_COUNT = 1
 def binarize_image(image, erosion_count):
     image = segment_fragment(image, erosion_count)
 
-    binary = image > 50
+    binary = image > 40
 
-    # Combination of Dilation and Erosion
-    binary = morphology.binary_dilation(binary)
-    binary = morphology.binary_erosion(binary)
+    # binary = morphology.binary_dilation(binary, selem=morphology.square(5))
+    # binary = morphology.binary_erosion(binary, selem=morphology.square(5))
 
     return binary
 

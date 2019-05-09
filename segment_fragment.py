@@ -3,26 +3,22 @@ import numpy as np
 import skimage
 from skimage import segmentation, morphology
 
-# Global parameters
-EROSION_COUNT = 24
 
-
-def segment_fragment(image, erosion_count):
+def segment_fragment(image):
     original_image = image
 
+    img2 = np.copy(image)
     image = segmentation.inverse_gaussian_gradient(image, alpha=200, sigma=1)
     mask = segmentation.flood(image, (int(
         original_image.shape[0] / 2), int(original_image.shape[1] / 2)), tolerance=0.5)
     mask = morphology.closing(mask, selem=morphology.disk(4))
 
-    while (erosion_count > 0):
-        mask = morphology.erosion(mask)
-        erosion_count -= 1
+    img2[mask == False] = 0
+    segmented = segmentation.morphological_chan_vese(img2, 15, init_level_set=mask)
+    img2 = np.copy(original_image)
+    img2[segmented == False] = 255
 
-    original_image[mask == False] = 255
-
-    image = original_image
-    return image
+    return img2
 
 
 if __name__ == "__main__":
@@ -34,7 +30,7 @@ if __name__ == "__main__":
     file_name = os.path.abspath(sys.argv[1])
     img = skimage.io.imread(file_name)
 
-    img = segment_fragment(img, EROSION_COUNT)
+    img = segment_fragment(img)
 
     skimage.io.imshow(img)
     skimage.io.show()
