@@ -1,4 +1,4 @@
-import sys
+import sys, os
 import numpy as np
 import skimage
 from skimage import segmentation, morphology
@@ -26,13 +26,13 @@ def segment_fragment(image, erosion_count):
 
 
 if __name__ == "__main__":
-
-    # Get file from command line ###
+    # Get file from command line
     if len(sys.argv) < 2:
-        print("ERROR --- Please give the filename in /image-data that you wish to segment")
+        print("[ERROR] Please specify the file you wish to segment.")
         exit()
-    fileName = "../image-data/" + sys.argv[1]
-    img = skimage.io.imread(fileName)
+
+    file_name = os.path.abspath(sys.argv[1])
+    img = skimage.io.imread(file_name)
 
     img = segment_fragment(img, EROSION_COUNT)
 

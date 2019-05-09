@@ -1,4 +1,5 @@
 import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -13,9 +14,7 @@ EROSION_COUNT = 1
 def binarize_image(image, erosion_count):
     image = segment_fragment(image, erosion_count)
 
-    thresh = filters.threshold_minimum(image)
-    print("Threshold value: {}".format(thresh))
-    binary = image > thresh
+    binary = image > 50
 
     # Combination of Dilation and Erosion
     binary = morphology.binary_dilation(binary)
@@ -27,13 +26,14 @@ def binarize_image(image, erosion_count):
 if __name__ == "__main__":
     # Get file from command line.
     if len(sys.argv) < 2:
-        print("ERROR --- Please give the filename in /image-data that you wish to binarize")
+        print("[ERROR] Please specify the file you wish to segment.")
         exit()
-    fileName = "../image-data/" + sys.argv[1]
-    image = io.imread(fileName)
+
+    file_name = os.path.abspath(sys.argv[1])
+    image = io.imread(file_name)
 
     original_image = image
-    plt.figure("Compare", figsize=(15, 8))
+    plt.figure("Comparison")
 
     plt.subplot(121)
     plt.imshow(original_image, cmap="gray")
