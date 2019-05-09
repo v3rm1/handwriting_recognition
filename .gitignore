@@ -3,4 +3,5 @@ __pycache__/
 image-data/
 monkbrill/
 test-images/
+.vscode/
 .htns.py.swp
