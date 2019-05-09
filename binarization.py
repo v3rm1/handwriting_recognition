@@ -8,13 +8,13 @@ from skimage import segmentation, io, filters, morphology
 from segment_fragment import segment_fragment
 
 # Global parameters
-EROSION_COUNT = 1
+EROSION_COUNT = 24
 
 
 def binarize_image(image, erosion_count):
     image = segment_fragment(image, erosion_count)
 
-    binary = image > 50
+    binary = image > 48
 
     # Combination of Dilation and Erosion
     binary = morphology.binary_dilation(binary)
