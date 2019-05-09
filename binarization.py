@@ -7,18 +7,14 @@ import skimage
 from skimage import segmentation, io, filters, morphology
 from segment_fragment import segment_fragment
 
-# Global parameters
-EROSION_COUNT = 24
 
+def binarize_image(image):
+    image = segment_fragment(image)
 
-def binarize_image(image, erosion_count):
-    image = segment_fragment(image, erosion_count)
+    binary = image > 45
 
-    binary = image > 48
-
-    # Combination of Dilation and Erosion
-    binary = morphology.binary_dilation(binary)
-    binary = morphology.binary_erosion(binary)
+    # binary = morphology.binary_dilation(binary, selem=morphology.square(5))
+    # binary = morphology.binary_erosion(binary, selem=morphology.square(5))
 
     return binary
 
@@ -38,7 +34,7 @@ if __name__ == "__main__":
     plt.subplot(121)
     plt.imshow(original_image, cmap="gray")
 
-    binary = binarize_image(image, EROSION_COUNT)
+    binary = binarize_image(image)
 
     plt.subplot(122)
     plt.imshow(binary, cmap="gray")
