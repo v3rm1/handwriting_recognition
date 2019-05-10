@@ -2,11 +2,16 @@ from lib import astar, jps, astar_obj, jps_obj
 from time import time as timer
 
 
-def search(grid, type, line):
+def search(grid, type, prevLine, line, startX, endX):
+    
+
+    #A* takes steps of 2, so if everything is even it's safer
+    prevLine = 2*(prevLine // 2)
+    line = 2*(line // 2)
 
     begin_search = timer()
 
-    start, goal = get_start_and_goal(line, grid)
+    start, goal = get_start_and_goal(prevLine, line, startX, endX)
     # start, goal = [line, 0], [line + 20, 3320]
 
     if type == 'A':
@@ -24,5 +29,5 @@ def search(grid, type, line):
     return path, map
 
 
-def get_start_and_goal(line, grid):
-    return [line, 0], [line, grid.shape[1]-1]
+def get_start_and_goal(p, l, startX, endX):
+    return [p, startX], [l, endX]

@@ -47,7 +47,8 @@ class Astar():
         while not self.open.empty():
 
             current = self.open.get()
-            self.print_info(current)
+
+            #self.print_info(current)
 
             if current == self.goal:
                 return self.reconstruct_path(current)
@@ -57,6 +58,9 @@ class Astar():
             for neighbor in self.get_neighbors(current):
 
                 if neighbor in self.close:
+                    continue
+                # Don't search past the goal
+                if neighbor[1] > self.goal[1]:
                     continue
 
                 new_gscore = self.gscore[tuple(current)] + self.compute_cost(current, neighbor, self.start)
@@ -76,9 +80,9 @@ class Astar():
     def get_neighbors(self, node):
         r, c = node
         s = self.step
-        neighbors = [[r - s, c - s], [r - s, c], [r - s, c + s],
-                     [r, c - s], [r, c + s],
-                     [r + s, c - s], [r + s, c], [r + s, c + s]]
+        neighbors = [[r - s, c], [r - s, c + s],
+                     [r, c + s],
+                     [r + s, c], [r + s, c + s]]
         return filter(self.in_bounds, neighbors)
         # return filter(self.walkable, neighbors)
 
@@ -108,7 +112,8 @@ class Astar():
         m = self.M(neighbor)
         d = self.D(neighbor)
         d2 = self.D2(neighbor)
-        return 3*v+1*n+50*m+150*d+50*d2
+        return 1*n+50*m+150*d+50*d2
+        #return 3*v+1*n+50*m+150*d+50*d2
         # return 2.5*v+1*n+50*m+130*d+0*d2
 
     def V(self, node, start):

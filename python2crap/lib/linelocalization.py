@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import peakutils
+import math
 
 
 def localize(im):
@@ -43,8 +44,13 @@ def projection_analysis(im):
     # find peaks withing the ink density histogram
     max_hist = max(hist)
     mean_hist = np.mean(hist)
+    
+    #if the slice is empty.....then there are no paths to find
+    if max_hist == 0:
+        return []
+
     thres_hist = mean_hist / max_hist
-    peaks = peakutils.indexes(hist, thres=thres_hist, min_dist=50)
+    peaks = peakutils.indexes(hist, thres=thres_hist, min_dist=70)
     # find peaks that are too high
     mean_peaks = np.mean(hist[peaks])
     std_peaks = np.std(hist[peaks])
