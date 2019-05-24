@@ -3,6 +3,7 @@ import numpy as np
 from sys import argv
 from lib import sauvola, linelocalization, pathfinder
 from time import time as timer
+import matplotlib
 
 ###custom parameters###
 n_strips = 10
@@ -67,6 +68,30 @@ def connectPaths(totalPaths, paths):
 # ------ MAIN ------ #
 ######################
 
+def smear(img, s):
+    img_result = np.full(img.shape, 255)
+    for i in range(0, img.shape[0]):
+        for j in range(s,img.shape[1]-s):
+            if img[i][j] == 0:
+                for k in range(j-s, j+s+1):
+                    img_result[i][k] = 0
+    return img_result
+
+def line_segment(img, a_path, b_path):
+    img_result = img
+    if a_path is not None:
+        for p in a_path[1:]:
+            for i in range(0,p[0]):
+                img_result[i][p[1]] = 255
+                img_result[i][p[1]+1] = 255
+
+    if b_path is not None:
+        for p in b_path[1:]:
+            for i in range(p[0], img.shape[0]):
+                img_result[i][p[1]] = 255
+                img_result[i][p[1]+1] = 255
+
+    return img_result
 
 begin = timer()
 
@@ -86,6 +111,13 @@ for filename in filenames:
 	
 	### format the (already) binarized image "im"
     imbw = np.array(255 * (im >= 45), 'uint8')
+    original_imbw = imbw
+
+    ### erode that shit
+    #imbw = cv2.erode(imbw, np.ones((10,10), np.uint8), iterations=1)
+
+    print('smearing image...')
+    imbw = smear(imbw, 10)
 	
     ### modified algorithm to process things in strips, and concatenate those strips###
     im_list= np.array_split(imbw, n_strips, 1)
@@ -104,7 +136,7 @@ for filename in filenames:
             startX = 2 * (strip_length*i // 2)
             endX = 2 * (strip_length*(i+1) // 2)
             for i in range(0, len(lines)):
-                path, map = pathfinder.search(imbw, 'A', starts[i], lines[i], startX, endX)
+                path, map = pathfinder.search(imbw, 'A', int(starts[i]), lines[i], startX, endX)
                 paths[i] = path
             if total_paths == None:
                 total_paths = paths[:]
@@ -112,7 +144,7 @@ for filename in filenames:
                 total_paths = connectPaths(total_paths, paths)    
             prev_lines = lines[:]
             
-    #extend paths to the edges of the image
+    # #extend paths to the edges of the image
     for i in range(0, len(total_paths)):
         if total_paths[i][-1][1] != 0:
             path, map = pathfinder.search(imbw, 'A', total_paths[i][-1][0], total_paths[i][-1][0], 0, total_paths[i][-1][1])
@@ -121,9 +153,23 @@ for filename in filenames:
             path, map = pathfinder.search(imbw, 'A', total_paths[i][0][0], total_paths[i][0][0], total_paths[i][0][1], im_length - 1)
             total_paths[i] = path + total_paths[i]
     
-    for path in total_paths:
-        draw_line(imbw, path)
+    ordered_paths = sorted(total_paths, key=lambda x: x[0][0])
 
-    save(filename, imbw)
+    segmented_images = [None] * (len(ordered_paths) + 1)
+    for i in range(0, len(segmented_images)):
+        if (i-1) < 0:
+            a_path = None
+        else:
+            a_path = ordered_paths[i-1]
+        if i >= len(ordered_paths):
+            b_path = None
+        else:
+            b_path = ordered_paths[i]
+        segmented_images[i] = line_segment(np.copy(original_imbw), a_path, b_path)
+        save(filename + "_" + str(i), segmented_images[i])
+
+    for path in ordered_paths:
+        draw_line(original_imbw, path)
+    save(filename, original_imbw)
 
 print(' - Elapsed time: ' + str((timer() - begin)) + ' s\n')

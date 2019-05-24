@@ -39,7 +39,7 @@ def enhance(im):
 
 def projection_analysis(im):
     # compute the ink density histogram (sum each rows)
-    hist = cv2.reduce(im, 1, cv2.REDUCE_SUM, dtype=cv2.CV_32F)
+    hist = cv2.reduce(im, 1, cv2.REDUCE_SUM, dtype=cv2.CV_64F)
     hist = hist.ravel()
     # find peaks withing the ink density histogram
     max_hist = max(hist)
