@@ -1,4 +1,4 @@
-from lib import astar_obj
+from line_segmenter import astar_obj
 
 
 class Jps():

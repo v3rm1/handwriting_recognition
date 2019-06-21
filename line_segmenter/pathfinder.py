@@ -1,10 +1,8 @@
-from lib import astar, jps, astar_obj, jps_obj
+from line_segmenter import astar, jps, astar_obj, jps_obj
 from time import time as timer
 
 
 def search(grid, type, prevLine, line, startX, endX):
-    
-
     #A* takes steps of 2, so if everything is even it's safer
     prevLine = 2*(prevLine // 2)
     line = 2*(line // 2)

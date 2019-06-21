@@ -3,7 +3,6 @@ import numpy as np
 import skimage
 from skimage import segmentation, morphology
 
-
 def segment_fragment(image):
     original_image = image
 
