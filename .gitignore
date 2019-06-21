@@ -6,3 +6,7 @@ test-images/
 .vscode/
 .htns.py.swp
 *.pyc
+*.jpeg
+*.jpg
+*.png
+models/
