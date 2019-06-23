@@ -10,7 +10,7 @@ import cv2 as cv
 from cnn_char_pred import char_to_text, load_model_file
 
 
-model_file_path = './models/kerasSun_23_Jun_19__191628.h5'
+model_file_path = './models/keras_finetuned_model.h5'
 label_dict_path = './models/label_list.txt'
 
 def run(im):
@@ -112,7 +112,9 @@ if __name__ == '__main__':
         img = skimage.img_as_ubyte(img)
         img = cv.merge((img, img, img))
         img = np.reshape(img, (-1, 70, 70, 3))
-        char_to_text(model, img, label_dict_path)
+        save_file = char_to_text(model, img, label_dict_path)
+
+    print('Prediction complete. Text saved to {}.\n Text is Habbakuk True Type Font compatible symbols.'.format(save_file))
 
     # lt.figure("Comparison")
     '''

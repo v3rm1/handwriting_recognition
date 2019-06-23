@@ -81,11 +81,11 @@ def convert_to_habbakuk(pred, habbakuk_dict=habbakuk_char_map, img_file_name=sys
     with open(save_file, "a") as f:
         f.write(habbakuk_str)
     f.close()
-    return 0
+    return save_file
 
 def char_to_text(model, image, label_dict_path):
     
     
     predictions = predict_chars(model, image, label_dict_path)
-    habbakuk_pred = convert_to_habbakuk(predictions)
-    return
+    habbakuk_pred_path = convert_to_habbakuk(predictions)
+    return habbakuk_pred_path
