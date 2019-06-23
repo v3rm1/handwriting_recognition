@@ -19,13 +19,13 @@ def draw_map(im, map):
 
 
 def print_path(path):
-    print('\t# path: ' + str(path[::-1]))
+    # print('\t# path: ' + str(path[::-1]))
 
 
 def save(filename, imbw):
     imbw_filename = str.replace(filename, '.', '_bw.')
     imbw_filename = str.replace(imbw_filename, 'data', 'data/bw')
-    print('Saving image "' + imbw_filename + '"..\n')
+    # print('Saving image "' + imbw_filename + '"..\n')
     cv2.imwrite(imbw_filename, imbw)
     #immap_filename = str.replace(imbw_filename, '_bw', '_map')
     #cv2.imwrite(immap_filename, immap)
@@ -123,7 +123,7 @@ def line_segmentation(im):
     ### erode that shit
     #imbw = cv2.erode(imbw, np.ones((10,10), np.uint8), iterations=1)
 
-    print('smearing image...')
+    # print('smearing image...')
     imbw = smear(imbw, 10)
 	
     ### modified algorithm to process things in strips, and concatenate those strips###

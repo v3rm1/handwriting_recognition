@@ -99,7 +99,6 @@ if __name__ == '__main__':
 
     im = io.imread(sys.argv[1])
     original = np.copy(im)
-    print("ORIGINAL:", original.shape)
     boxes, linenumbers = run(im)
     print("Found {} character segments!!".format(len(boxes)))
 
@@ -114,18 +113,3 @@ if __name__ == '__main__':
         save_file = char_to_text(model, img, label_dict_path)
 
     print('Prediction complete. Text saved to {}.\n Text is Habbakuk True Type Font compatible symbols.'.format(save_file))
-
-    # lt.figure("Comparison")
-    '''
-    plt.subplot(221)
-    plt.imshow(original, cmap="gray")
-    plt.subplot(222)
-    plt.imshow(lines[2], cmap="gray")
-    plt.subplot(223)
-    plt.imshow(lines[3], cmap="gray")
-    plt.subplot(224)
-    plt.imshow(lines[4], cmap="gray")
-    '''
-    '''plt.imshow(lines[0], cmap="gray")
-    plt.tight_layout()
-    plt.show()'''

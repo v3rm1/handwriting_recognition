@@ -42,7 +42,7 @@ class Astar():
         self.goal = goal
         self.gscore[tuple(self.start)] = 0
         self.open.put(self.start, self.heuristic(self.start, self.goal))
-        print('start: ' + str(self.start) + " - goal: " + str(self.goal), end=' ')
+        # print('start: ' + str(self.start) + " - goal: " + str(self.goal), end=' ')
 
         while not self.open.empty():
 
@@ -173,7 +173,7 @@ class Astar():
 
     def print_info(self, current):
         # print 'gscore: ' + str(self.gscore)
-        print('current: ' + str(current))
+        # print('current: ' + str(current))
         # print 'open: ' + str(self.open)
         # print 'close: ' + str(self.close)
         # print '------------------------------------'

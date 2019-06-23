@@ -175,5 +175,5 @@ def main():
     # save_comparison(image_og, res, name)
     # save_image(res, name)
 
-    print("Done.\n")
+    # print("Done.\n")
     return res

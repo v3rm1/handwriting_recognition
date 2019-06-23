@@ -25,7 +25,7 @@ class Jps():
 
     def identify_successors(self, node):
         neighbors = self.find_neighbors(node)
-        print(neighbors)
+        # print(neighbors)
         for neighbor in neighbors:
             jump_node = self.jump(neighbor, node)
 
@@ -49,7 +49,7 @@ class Jps():
 
         r, c = node.row, node.col
         dr, dc = r - parent.row, c - parent.col
-        print(node, parent, dr, dc)
+        # print(node, parent, dr, dc)
 
         if self.wall([r, c]):
             return None

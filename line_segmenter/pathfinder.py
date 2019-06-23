@@ -13,16 +13,16 @@ def search(grid, type, prevLine, line, startX, endX):
     # start, goal = [line, 0], [line + 20, 3320]
 
     if type == 'A':
-        print('A*..')
+        # print('A*..')
         a = astar.Astar(grid)
         path, map = a.pathfind(start, goal)
 
     elif type == 'jps':
-        print('A* + JPS...')
+        # print('A* + JPS...')
         j = jps.Jps(grid)
         path, map = j.pathfind(start, goal)
 
-    print(' => path found in ' + str(timer() - begin_search) + ' s')
+    # print(' => path found in ' + str(timer() - begin_search) + ' s')
 
     return path, map
 
