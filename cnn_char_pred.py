@@ -83,9 +83,28 @@ def convert_to_habbakuk(pred, habbakuk_dict=habbakuk_char_map, img_file_name=sys
     f.close()
     return save_file
 
+def english_representation(pred, img_file_name=sys.argv[1], output_path='./output_txt_files_english'):
+    img_file_name = img_file_name.split('/')[-1]
+    
+    char_list = []
+    for char_pos in range(len(pred)-1, -1, -1):
+        char_list.append(pred[char_pos])
+    
+    english_str = '  '.join(char_list)
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    save_file_english = os.path.join(output_path, img_file_name.split('.')[0] + '.txt')
+
+    with open(save_file_english, "a") as f:
+        f.write(english_str)
+    f.close()
+    return save_file_english
+
 def char_to_text(model, image, label_dict_path):
     
     
     predictions = predict_chars(model, image, label_dict_path)
+    eng_rep = english_representation(predictions)
     habbakuk_pred_path = convert_to_habbakuk(predictions)
     return habbakuk_pred_path
