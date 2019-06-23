@@ -12,11 +12,11 @@ import cv2 as cv
 def run(im):
     # binarized = binarize_image(im)
     cv_binarized = skimage.img_as_ubyte(preprocessing.main())
-    # lines = line_segmentation(cv_binarized)
-    # lines = [skimage.img_as_float(i) for i in lines]
-    lines = [skimage.img_as_float(cv_binarized)]
+    lines = line_segmentation(cv_binarized)
+    lines = [skimage.img_as_float(i) for i in lines]
+    # lines = [skimage.img_as_float(cv_binarized)]
     bounding_boxes = []
-    for line in lines:
+    for i, line in enumerate(lines):
         # Find the contours
         contours = skimage.measure.find_contours(line, 0.8)
         for contour in contours:
@@ -24,7 +24,8 @@ def run(im):
             bound = (int(contour[:, 0].min()),
                      int(contour[:, 1].min()),
                      int(contour[:, 0].max() - contour[:, 0].min()),
-                     int(contour[:, 1].max() - contour[:, 1].min()))
+                     int(contour[:, 1].max() - contour[:, 1].min()),
+                     i)
             # Only keep it if it's large enough
             if bound[2] > 5 and bound[3] > 5:
                 bounding_boxes.append(bound)
@@ -42,19 +43,21 @@ def run(im):
                     min(bound[0], other[0]),
                     min(bound[1], other[1]),
                     bound[2] + other[2],
-                    bound[3] + other[3]
+                    bound[3] + other[3],
+                    min(bound[4], other[4])
                 ))
                 done.append(i1)
                 done.append(i2)
 
     boxes = merged + bounding_boxes
     # Draw the rectangles
-    for rect in boxes:
-        lines[0][rect[0]:rect[0]+rect[2], rect[1]] = 0
-        lines[0][rect[0]:rect[0]+rect[2], rect[1]+rect[3]] = 0
-        lines[0][rect[0], rect[1]:rect[1]+rect[3]] = 0
-        lines[0][rect[0]+rect[2], rect[1]:rect[1]+rect[3]] = 0
-    return lines
+    # for rect in boxes:
+    #     lines[0][rect[0]:rect[0]+rect[2], rect[1]] = 0
+    #     lines[0][rect[0]:rect[0]+rect[2], rect[1]+rect[3]] = 0
+    #     lines[0][rect[0], rect[1]:rect[1]+rect[3]] = 0
+    #     lines[0][rect[0]+rect[2], rect[1]:rect[1]+rect[3]] = 0
+    
+    return boxes
 
         # _fig, ax = plt.subplots()
         # ax.imshow(line, interpolation='nearest', cmap=plt.cm.gray)
