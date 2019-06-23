@@ -8,7 +8,7 @@ Before use: create an 'output' folder, resulting images will be stored there.
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-from skimage import segmentation, morphology, filters
+from skimage import segmentation, morphology, filters, color
 
 data_path           = sys.argv[1]
 tolerance_seed      = 80  #80
@@ -16,6 +16,7 @@ tolerance_grow      = 90  #90
 
 def regiongrow(data_path):
     image = plt.imread(data_path)
+    image = color.rgb2gray(np.array(image))
     image = np.array(image)
 
     ### TRY
@@ -137,6 +138,7 @@ def save_image(image, name):
 def main():
     name = sys.argv[1].split('/')[-1].split('.')[0]
     print("Segmenting image: {}".format(name))
+    image_og = color.rgb2gray(plt.imread(data_path))
     image_og = plt.imread(data_path)
     seg = regiongrow(data_path)
 
