@@ -134,45 +134,46 @@ def save_image(image, name):
 
 
 
+def main():
+    name = sys.argv[1].split('/')[-1].split('.')[0]
+    print("Segmenting image: {}".format(name))
+    image_og = plt.imread(data_path)
+    seg = regiongrow(data_path)
 
-name = sys.argv[1].split('/')[-1].split('.')[0]
-print("Segmenting image: {}".format(name))
-image_og = plt.imread(data_path)
-seg = regiongrow(data_path)
+    counter = 0
+    for i in seg:
+        for j in i:
+            if (j == True):
+                counter += 1
+    print("Segmented area dimension: {}".format(counter))
 
-counter = 0
-for i in seg:
-    for j in i:
-        if (j == True):
-            counter += 1
-print("Segmented area dimension: {}".format(counter))
-
-print("Processing...")
-seg = 255 * seg
-seg = morphology.dilation(seg, selem=morphology.disk(6))
-seg = morphology.area_closing(seg, area_threshold=3000)
-seg = morphology.dilation(seg, selem=morphology.disk(4))
-seg = morphology.area_closing(seg, area_threshold=400)
-seg = morphology.opening(seg, selem=morphology.disk(16))
-seg = morphology.binary_erosion(seg, selem=morphology.disk(4))
+    print("Processing...")
+    seg = 255 * seg
+    seg = morphology.dilation(seg, selem=morphology.disk(6))
+    seg = morphology.area_closing(seg, area_threshold=3000)
+    seg = morphology.dilation(seg, selem=morphology.disk(4))
+    seg = morphology.area_closing(seg, area_threshold=400)
+    seg = morphology.opening(seg, selem=morphology.disk(16))
+    seg = morphology.binary_erosion(seg, selem=morphology.disk(4))
 
 
-seg = (1/255) * seg
-res = np.copy(image_og)
-res[seg == False] = 255
+    seg = (1/255) * seg
+    res = np.copy(image_og)
+    res[seg == False] = 255
 
-res = filters.gaussian(res, sigma=1.5)
-thresh = filters.threshold_sauvola(res)
-res = (res > thresh)*1
-res = morphology.area_closing(res, area_threshold=100) #64
-res = morphology.binary_erosion(res)
+    res = filters.gaussian(res, sigma=1.5)
+    thresh = filters.threshold_sauvola(res)
+    res = (res > thresh)*1
+    res = morphology.area_closing(res, area_threshold=100) #64
+    res = morphology.binary_erosion(res)
 
-# Apply eroded mask again to delete borders from Sauvola
-seg = morphology.binary_erosion(seg, selem=morphology.disk(24))
-res[seg == False] = 255
+    # Apply eroded mask again to delete borders from Sauvola
+    seg = morphology.binary_erosion(seg, selem=morphology.disk(24))
+    res[seg == False] = 255
 
-# show_comparison(image, seg)
-# save_comparison(image_og, res, name)
-save_image(res, name)
+    # show_comparison(image, seg)
+    # save_comparison(image_og, res, name)
+    # save_image(res, name)
 
-print("Done.\n")
+    print("Done.\n")
+    return res
