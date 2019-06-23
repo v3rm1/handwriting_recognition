@@ -49,11 +49,15 @@ def main():
     datagen = keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, rotation_range=15, width_shift_range=0.2, height_shift_range=0.2)
     train_generator = datagen.flow_from_directory(train, target_size=(70,70), color_mode="rgb", batch_size=32, class_mode="categorical", shuffle=True, seed=5)
     valid_generator = datagen.flow_from_directory(valid, target_size=(70,70), color_mode="rgb", batch_size=32, class_mode="categorical", shuffle=True, seed=5)
-    test_generator = datagen.flow_from_directory(test, target_size=(224, 224), color_mode="rgb", batch_size=1, class_mode=None, shuffle=False, seed=5)
+    test_generator = datagen.flow_from_directory(test, target_size=(70, 70), color_mode="rgb", batch_size=1, class_mode=None, shuffle=False, seed=5)
 
 
     labels = (train_generator.class_indices)
     labels = dict((v,k) for k,v in labels.items())
+    with open("label_list.txt", "a") as f:
+        for k, v in labels.items():
+            f.write(str(k) + ': ' + v + '\n' )
+        f.close()
 
     model.fit_generator(generator=train_generator, steps_per_epoch=STEP_SIZE_TRAIN, validation_data=valid_generator, validation_steps=STEP_SIZE_VALID, callbacks=[model_checkpoint, early_stop], epochs=epoch)
 
