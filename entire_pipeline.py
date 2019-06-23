@@ -11,7 +11,9 @@ import cv2 as cv
 
 def run(im):
     # binarized = binarize_image(im)
-    cv_binarized = skimage.img_as_ubyte(preprocessing.main())
+    binarized = preprocessing.main()
+    cv_binarized = skimage.img_as_ubyte(binarized)
+    
     lines = line_segmentation(cv_binarized)
     lines = [skimage.img_as_float(i) for i in lines]
     # lines = [skimage.img_as_float(cv_binarized)]
@@ -50,6 +52,11 @@ def run(im):
                 done.append(i2)
 
     boxes = merged + bounding_boxes
+    boxes = [box for box in boxes if box[2] < 80 and box[3] < 80]
+    windows = np.zeros((len(boxes), 70, 70))
+    for i, box in enumerate(boxes):
+        windows[i, :, :] = skimage.transform.resize(binarized[box[0]:box[0]+box[2], box[1]:box[1]+box[3]], (70, 70))
+    line_ns = [box[4] for box in boxes]
     # Draw the rectangles
     # for rect in boxes:
     #     lines[0][rect[0]:rect[0]+rect[2], rect[1]] = 0
@@ -57,7 +64,7 @@ def run(im):
     #     lines[0][rect[0], rect[1]:rect[1]+rect[3]] = 0
     #     lines[0][rect[0]+rect[2], rect[1]:rect[1]+rect[3]] = 0
     
-    return boxes
+    return (windows, line_ns)
 
         # _fig, ax = plt.subplots()
         # ax.imshow(line, interpolation='nearest', cmap=plt.cm.gray)
@@ -89,9 +96,10 @@ if __name__ == '__main__':
 
     im = io.imread(sys.argv[1])
     original = np.copy(im)
-    lines = run(im)
+    boxes, linenumbers = run(im)
+    print("Found ", len(boxes), " boxes!!")
 
-    plt.figure("Comparison")
+    # lt.figure("Comparison")
     '''
     plt.subplot(221)
     plt.imshow(original, cmap="gray")
@@ -102,6 +110,6 @@ if __name__ == '__main__':
     plt.subplot(224)
     plt.imshow(lines[4], cmap="gray")
     '''
-    plt.imshow(lines[0], cmap="gray")
+    '''plt.imshow(lines[0], cmap="gray")
     plt.tight_layout()
-    plt.show()
+    plt.show()'''
