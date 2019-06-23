@@ -3,17 +3,18 @@ from line_segmenter.main import line_segmentation
 from binarization import binarize_image
 import matplotlib.pyplot as plt
 import sys
+import preprocessing
 import skimage
 from skimage import io
 import cv2 as cv
 
 
 def run(im):
-    binarized = binarize_image(im)
-    cv_binarized = skimage.img_as_ubyte(binarized)
+    # binarized = binarize_image(im)
+    cv_binarized = skimage.img_as_ubyte(preprocessing.main())
     # lines = line_segmentation(cv_binarized)
     # lines = [skimage.img_as_float(i) for i in lines]
-    lines = [binarized]
+    lines = [skimage.img_as_float(cv_binarized)]
     bounding_boxes = []
     for line in lines:
         # Find the contours
@@ -46,9 +47,13 @@ def run(im):
                 done.append(i1)
                 done.append(i2)
 
+    boxes = merged + bounding_boxes
     # Draw the rectangles
-    for rect in merged:
-        lines[0][rect[0]:rect[0]+rect[2], rect[1]:rect[1]+rect[3]] = 0
+    for rect in boxes:
+        lines[0][rect[0]:rect[0]+rect[2], rect[1]] = 0
+        lines[0][rect[0]:rect[0]+rect[2], rect[1]+rect[3]] = 0
+        lines[0][rect[0], rect[1]:rect[1]+rect[3]] = 0
+        lines[0][rect[0]+rect[2], rect[1]:rect[1]+rect[3]] = 0
     return lines
 
         # _fig, ax = plt.subplots()
