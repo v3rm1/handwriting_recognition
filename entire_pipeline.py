@@ -7,7 +7,11 @@ import preprocessing
 import skimage
 from skimage import io
 import cv2 as cv
+from cnn_char_pred import char_to_text, load_model_file
 
+
+model_file_path = './models/kerasSun_23_Jun_19__191628.h5'
+label_dict_path = './models/label_list.txt'
 
 def run(im):
     # binarized = binarize_image(im)
@@ -96,8 +100,19 @@ if __name__ == '__main__':
 
     im = io.imread(sys.argv[1])
     original = np.copy(im)
+    print("ORIGINAL:", original.shape)
     boxes, linenumbers = run(im)
-    print("Found ", len(boxes), " boxes!!")
+    print("Found {} character segments!!".format(len(boxes)))
+
+    
+    model = load_model_file(model_file_path)
+
+    for char_index in range(len(boxes)):
+        img = boxes[char_index]
+        img = skimage.img_as_ubyte(img)
+        img = cv.merge((img, img, img))
+        img = np.reshape(img, (-1, 70, 70, 3))
+        char_to_text(model, img, label_dict_path)
 
     # lt.figure("Comparison")
     '''
