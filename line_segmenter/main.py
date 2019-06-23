@@ -20,6 +20,7 @@ def draw_map(im, map):
 
 def print_path(path):
     # print('\t# path: ' + str(path[::-1]))
+    return 0
 
 
 def save(filename, imbw):

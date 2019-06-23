@@ -177,3 +177,4 @@ class Astar():
         # print 'open: ' + str(self.open)
         # print 'close: ' + str(self.close)
         # print '------------------------------------'
+        return 0
