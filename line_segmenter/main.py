@@ -83,13 +83,19 @@ def line_segment(img, a_path, b_path):
         for p in a_path[1:]:
             for i in range(0,p[0]):
                 img_result[i][p[1]] = 255
-                img_result[i][p[1]+1] = 255
+                try:
+                    img_result[i][p[1]+1] = 255
+                except IndexError:
+                    pass
 
     if b_path is not None:
         for p in b_path[1:]:
             for i in range(p[0], img.shape[0]):
                 img_result[i][p[1]] = 255
-                img_result[i][p[1]+1] = 255
+                try:
+                    img_result[i][p[1]+1] = 255
+                except IndexError:
+                    pass
 
     return img_result
 

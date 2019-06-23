@@ -1,6 +1,5 @@
 import numpy as np
 from line_segmenter.main import line_segmentation
-from binarization import binarize_image
 import matplotlib.pyplot as plt
 import sys
 import preprocessing
