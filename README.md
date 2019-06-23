@@ -1,6 +1,6 @@
 # Handwriting Recognition Project
 
-To run the requirements must be installed:
+Requirements must be installed via 
   'pip install -r requirements.txt'
   
 To run:
