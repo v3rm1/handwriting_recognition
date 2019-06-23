@@ -46,19 +46,6 @@ def load_model_file(model_file_path):
         print("Model file not found.")
         return 0
 
-# # TODO: Remove this method since stream comes from segmenter
-# def test_char_stream(test_file_path='./test'):
-#     files = []
-#     if os.path.exists(test_file_path):
-#         for file in os.listdir(test_file_path):
-#             f_path = os.path.join('./test', file)
-#             files.append(f_path)
-#         return files
-#     else:
-#         print("Test file path not found.")
-#         return 0
-
-# TODO: Add image file names and segmented character as inputs to this function
 def predict_chars(model, char_imgs, label_dict_path, file_name=sys.argv[1]):
     pred_text = []
     label_dict = {}
@@ -76,13 +63,10 @@ def predict_chars(model, char_imgs, label_dict_path, file_name=sys.argv[1]):
             pred = model.predict_classes(input_img)
             pred_text.append(label_dict[pred[0]])
     
-    print(pred_text)
     return pred_text
     
 def convert_to_habbakuk(pred, habbakuk_dict=habbakuk_char_map, img_file_name=sys.argv[1], output_path='./output_txt_files'):
     img_file_name = img_file_name.split('/')[-1]
-    print(img_file_name)
-    # import pdb; pdb.set_trace()
     
     habbakuk_convert = []
     for char_pos in range(len(pred)-1, -1, -1):
@@ -104,5 +88,4 @@ def char_to_text(model, image, label_dict_path):
     
     predictions = predict_chars(model, image, label_dict_path)
     habbakuk_pred = convert_to_habbakuk(predictions)
-    print(habbakuk_pred)
     return
