@@ -37,6 +37,7 @@ def edge_detect(file_name, thresh_min, thresh_max):
     for i, ctr in enumerate(sorted_ctrs):
         # Get bounding box
         x, y, w, h = cv2.boundingRect(ctr)
+        print(Ctr)
 
         # Getting ROI
         roi = gray[y:y+h, x:x+w]
