@@ -2,7 +2,7 @@ opencv_python==4.1.0.25
 opencv-contrib-python==4.1.0.25
 numpy==1.16.3
 scipy==1.2.1
-tensorflow==1.13.1
+tensorflow==2.5.0
 tensorflow-estimator==1.13.0
 matplotlib==3.0.3
 scikit_image==0.15.0
